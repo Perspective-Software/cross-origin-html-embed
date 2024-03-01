@@ -41,8 +41,9 @@
     "build": "rimraf dist && tsc -p tsconfig-mjs.json && tsc -p tsconfig-cjs.json && fix-esm-import-path dist/mjs/ && ./fixup.sh",
     "test": "jest",
     "test:cov": "jest --coverage",
-    "lint": "eslint . && prettier --check .",
-    "prepublishOnly": "npm run test && npm run build"
+    "lint:check": "eslint . && prettier --check .",
+    "lint:fix": "eslint . --fix && prettier --write .",
+    "prepublishOnly": "npm run test && npm run lint:check && npm run build"
   },
   "devDependencies": {
     "@jest/globals": "^29.7.0",

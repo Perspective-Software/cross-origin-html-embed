@@ -37,6 +37,7 @@ This SDK helps you to build your own cross-origin iframe sandboxes. This SDK is 
   * [Setup](#setup)
   * [Running tests](#running-tests)
   * [Build](#build)
+  * [Lint](#lint)
   * [Publish](#publish)
 <!-- TOC -->
 
@@ -64,8 +65,8 @@ To allow only specific origins:
 import { generateIframeHtml } from "@perspective-software/cross-origin-html-embed-server-sdk";
 
 const iframeHtml = generateIframeHtml({
-    allowAllOrigins: false,
-    originWhitelist: ["https://app.myservice.com"]
+  allowAllOrigins: false,
+  originWhitelist: ["https://app.myservice.com"],
 });
 ```
 
@@ -75,14 +76,14 @@ To allow all origins:
 import { generateIframeHtml } from "@perspective-software/cross-origin-html-embed-server-sdk";
 
 const iframeHtml = generateIframeHtml({
-    allowAllOrigins: true
+  allowAllOrigins: true,
 });
 ```
 
 ## All Options
 
 | Option            | Required                       | Description                                                                                                |
-|-------------------|--------------------------------|------------------------------------------------------------------------------------------------------------|
+| ----------------- | ------------------------------ | ---------------------------------------------------------------------------------------------------------- |
 | `allowAllOrigins` | yes                            | If `true`, receiving and sending messages from/to all origins via asterisk `*` is activated.               |
 | `originWhitelist` | (depends on `allowAllOrigins`) | A specific list of origins to receive messages from and sent messages to.                                  |
 | `name`            |                                | Will be added to the head title element.                                                                   |
@@ -109,19 +110,18 @@ import express from "express";
 const PORT = process.env.PORT || 4042;
 const app = express();
 
-app.get('/', (_, res) => {
-    // 🛡️ Here happens the magic
-    const iframeHtml = generateIframeHtml({
-        allowAllOrigins: false,
-        originWhitelist: ["https://app.myservice.com"]
-    });
+app.get("/", (_, res) => {
+  // 🛡️ Here happens the magic
+  const iframeHtml = generateIframeHtml({
+    allowAllOrigins: false,
+    originWhitelist: ["https://app.myservice.com"],
+  });
 
-    res.send(iframeHtml);
+  res.send(iframeHtml);
 });
 
-
 app.listen(PORT, () => {
-    console.log(`Server is running on port ${PORT}.`);
+  console.log(`Server is running on port ${PORT}.`);
 });
 ```
 
@@ -134,19 +134,19 @@ There is also an example available: [Next.js App Router Example 🔗](examples/n
 
 import { generateIframeHtml } from "@perspective-software/cross-origin-html-embed-server-sdk";
 
-export const dynamic = 'force-dynamic' // defaults to auto
+export const dynamic = "force-dynamic"; // defaults to auto
 
 export async function GET() {
-    // 🛡️ Here happens the magic
-    const iframeHtml = generateIframeHtml({
-        allowAllOrigins: false,
-        originWhitelist: ["https://app.myservice.com"],
-        name: "Next.js App Router Example"
-    });
-  
-    const response = new Response(iframeHtml);
-    response.headers.set("Content-Type", "text/html");
-    return response;
+  // 🛡️ Here happens the magic
+  const iframeHtml = generateIframeHtml({
+    allowAllOrigins: false,
+    originWhitelist: ["https://app.myservice.com"],
+    name: "Next.js App Router Example",
+  });
+
+  const response = new Response(iframeHtml);
+  response.headers.set("Content-Type", "text/html");
+  return response;
 }
 ```
 
@@ -177,6 +177,7 @@ npm run test
 ```
 
 With coverage:
+
 ```bash
 npm run test:cov
 ```
@@ -185,6 +186,18 @@ npm run test:cov
 
 ```bash
 npm run build
+```
+
+## Lint
+
+```bash
+npm run lint:fix
+```
+
+To just check the code:
+
+```bash
+npm run lint:check
 ```
 
 ## Publish
@@ -197,4 +210,5 @@ npm run build
 ```bash
 npm publish
 ```
-*(Runs tests, eslint and prettier before the actual publish step.)*
+
+_(Runs tests, eslint and prettier before the actual publish step.)_
