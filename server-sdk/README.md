@@ -1,7 +1,7 @@
 <p align="center">
     <br>
     <br>
-    <img src="assets/server-sdk-logo.png" width="100" height="100">
+    <img alt="Server SDK Logo" src="assets/server-sdk-logo.png" width="100" height="100">
     <br>
     <br>
 </p>

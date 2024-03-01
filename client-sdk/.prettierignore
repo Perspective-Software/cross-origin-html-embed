@@ -1,0 +1,5 @@
+node_modules
+dist
+jest.config.ts
+examples
+README.md
