@@ -204,7 +204,6 @@ npm run lint:check
 
 - Increment `package.json` version.
 - Create a `CHANGELOG` entry.
-- Commit, push and create a git tag.
 - Publish to npm.
 
 ```bash

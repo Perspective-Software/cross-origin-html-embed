@@ -1,6 +1,6 @@
 {
   "name": "@perspective-software/cross-origin-html-embed-server-sdk",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "keywords": [
     "cross",
     "origin",
@@ -10,7 +10,11 @@
     "sandbox"
   ],
   "description": "Server SDK to build your cross origin iframe sandboxes.",
-  "repository": "https://github.com/Perspective-Software/cross-origin-html-embed/server-sdk",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Perspective-Software/cross-origin-html-embed/",
+    "directory": "server-sdk"
+  },
   "publishConfig": {
     "access": "public"
   },

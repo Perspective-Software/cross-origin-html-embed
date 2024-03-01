@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.0.1
+
+### Fixed
+
+- Fixed `repository` in `package.json`.
+
 ## 1.0.0
 
 ### Added
