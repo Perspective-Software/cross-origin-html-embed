@@ -7,10 +7,12 @@ import { BaseMessage } from "../types";
  * @param message Message to be checked.
  * @return true if message is valid (client or iframe).
  */
-export function isValidMessage(message: unknown): boolean {
+export const isValidMessage = /* #__PURE__ */ function (
+  message: unknown,
+): boolean {
   return (
     !!message &&
     typeof message === "object" &&
     (message as BaseMessage).isCrossOriginHtmlEmbedMessage === true
   );
-}
+};

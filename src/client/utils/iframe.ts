@@ -6,8 +6,10 @@ import { IframeMessage } from "../types";
  * @param message Message to be checked.
  * @return true if message is from iframe.
  */
-export function isValidIframeMessage(message: unknown): boolean {
+export const isValidIframeMessage = /* #__PURE__ */ function (
+  message: unknown,
+): boolean {
   return (
     isValidMessage(message) && (message as IframeMessage).source === "iframe"
   );
-}
+};

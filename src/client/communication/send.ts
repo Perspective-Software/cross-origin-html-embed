@@ -13,7 +13,7 @@ export type SendHostMessageOptions = {
  * @param message Message to be sent.
  * @param options Optional.
  */
-export function sendHostMessage(
+export const sendHostMessage = /* #__PURE__ */ function (
   iframeOrWindow: HTMLIFrameElement | Window,
   message: Message,
   options?: SendHostMessageOptions,
@@ -67,7 +67,7 @@ export function sendHostMessage(
   for (const targetOrigin of targetOrigins) {
     window.postMessage(message, targetOrigin);
   }
-}
+};
 
 /**
  * Sends a "set head content" message to the given iframe/window.
@@ -79,7 +79,7 @@ export function sendHostMessage(
  * @param headContent Content for iframe head element.
  * @param options Optional.
  */
-export function sendSetHeadContentMessage(
+export const sendSetHeadContentMessage = /* #__PURE__ */ function (
   iframeOrWindow: HTMLIFrameElement | Window,
   headContent: string,
   options?: SendHostMessageOptions,
@@ -94,7 +94,7 @@ export function sendSetHeadContentMessage(
     },
     options,
   );
-}
+};
 
 /**
  * Sends a "set body content" message to the given iframe/window.
@@ -106,7 +106,7 @@ export function sendSetHeadContentMessage(
  * @param bodyContent Content for Embed Guard body element.
  * @param options Optional.
  */
-export function sendSetBodyContentMessage(
+export const sendSetBodyContentMessage = /* #__PURE__ */ function (
   iframeOrWindow: HTMLIFrameElement | Window,
   bodyContent: string,
   options?: SendHostMessageOptions,
@@ -121,4 +121,4 @@ export function sendSetBodyContentMessage(
     },
     options,
   );
-}
+};

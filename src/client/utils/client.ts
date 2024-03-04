@@ -6,8 +6,10 @@ import { HostBaseMessage } from "../types";
  * @param message Message to be checked.
  * @return true if message is from host.
  */
-export function isValidHostMessage(message: unknown): boolean {
+export const isValidHostMessage = /* #__PURE__ */ function (
+  message: unknown,
+): boolean {
   return (
     isValidMessage(message) && (message as HostBaseMessage).source === "host"
   );
-}
+};

@@ -11,7 +11,7 @@ import { isValidIframeMessage } from "../utils";
  * @param callback Callback to be executed when a valid iframe message has been received.
  * @return Unsubscribe/unlisten function. Detaches the "message" event listener.
  */
-export function receiveIframeMessages(
+export const receiveIframeMessages = /* #__PURE__ */ function (
   originOrIframeOrWindow: string | string[] | HTMLIFrameElement | Window,
   callback: (message: IframeMessage) => void,
 ): () => void {
@@ -75,7 +75,7 @@ export function receiveIframeMessages(
   return () => {
     window.removeEventListener("message", messageListener);
   };
-}
+};
 
 /**
  * Listens only for dimension update messages from iframes.
@@ -85,7 +85,7 @@ export function receiveIframeMessages(
  * @param callback Callback to be executed when a dimensions update message has been received.
  * @return Unsubscribe/unlisten function. Detaches the "message" event listener.
  */
-export function receiveIframeDimensionUpdates(
+export const receiveIframeDimensionUpdates = /* #__PURE__ */ function (
   originOrIframeOrWindow: string | string[] | HTMLIFrameElement | Window,
   callback: (message: IframeDimensionsUpdateMessage) => void,
 ): () => void {
@@ -94,4 +94,4 @@ export function receiveIframeDimensionUpdates(
       callback(message as IframeDimensionsUpdateMessage);
     }
   });
-}
+};

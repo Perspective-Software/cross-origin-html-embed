@@ -16,7 +16,9 @@ import { LogoAsciiArt } from "./constants";
  *
  * @param options Let's you control the output to some degree.
  */
-export function generateIframeHtml(options: GenerateIframeHtmlOptions) {
+export const generateIframeHtml = /* #__PURE__ */ function (
+  options: GenerateIframeHtmlOptions,
+) {
   const whitelistedOrigins = options.allowAllOrigins
     ? ["*"]
     : options.originWhitelist;
@@ -146,4 +148,4 @@ export function generateIframeHtml(options: GenerateIframeHtmlOptions) {
     </body>
 </html>
 `;
-}
+};

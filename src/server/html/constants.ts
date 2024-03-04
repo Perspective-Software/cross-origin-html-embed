@@ -1,4 +1,5 @@
 export const LogoAsciiArt =
+  /* #__PURE__ */
   "         ##       ##\\n" +
   "       ###      ######\\n" +
   "    ###        ###    ###\\n" +
