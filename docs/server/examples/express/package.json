@@ -14,7 +14,7 @@
     "typescript": "^5.3.3"
   },
   "dependencies": {
-    "@perspective-software/cross-origin-html-embed-server-sdk": "^1.0.0",
+    "@perspective-software/cross-origin-html-embed": "^1.0.0",
     "express": "^4.18.3"
   }
 }

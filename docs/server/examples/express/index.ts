@@ -1,4 +1,4 @@
-import { generateIframeHtml } from "@perspective-software/cross-origin-html-embed-server-sdk";
+import { generateIframeHtml } from "@perspective-software/cross-origin-html-embed/server";
 import express from "express";
 
 const PORT = process.env.PORT || 4042;

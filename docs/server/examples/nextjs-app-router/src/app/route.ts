@@ -1,4 +1,4 @@
-import { generateIframeHtml } from "@perspective-software/cross-origin-html-embed-server-sdk";
+import { generateIframeHtml } from "@perspective-software/cross-origin-html-embed/server";
 
 export const dynamic = "force-dynamic"; // defaults to auto
 

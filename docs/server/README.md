@@ -1,30 +1,13 @@
-<p align="center">
-    <br>
-    <br>
-    <img alt="Server SDK Logo" src="assets/server-sdk-logo.png" width="100" height="100">
-    <br>
-    <br>
-</p>
+# Server Functions
 
-<p align="center">
-  <img alt="JavaScript | TypeScript" src="https://img.shields.io/badge/JavaScript-TypeScript-blue">
-  <a href="https://www.npmjs.com/package/@perspective-software/cross-origin-html-embed-server-sdk">
-    <img alt="npm" src="https://img.shields.io/npm/v/@perspective-software/cross-origin-html-embed-server-sdk?color=%23e62770&label=NPM">
-  </a>
-  <br>
-  <br>
-</p>
-
-# Cross-Origin HTML Embed Server SDK
-
-This SDK helps you to build your own cross-origin iframe sandboxes. This SDK is very small.
+This part of the library helps you to generate your own "sandbox"
+HTML (files) and serve them.
 
 # Table of contents
 
 <!-- TOC -->
-* [Cross-Origin HTML Embed Server SDK](#cross-origin-html-embed-server-sdk)
+* [Server Functions](#server-functions)
 * [Table of contents](#table-of-contents)
-* [Installation](#installation)
 * [Usage](#usage)
   * [General](#general)
   * [All Options](#all-options)
@@ -33,27 +16,7 @@ This SDK helps you to build your own cross-origin iframe sandboxes. This SDK is 
   * [Express](#express)
   * [Next.js App Router](#nextjs-app-router)
   * [Other backend frameworks](#other-backend-frameworks)
-* [Development](#development)
-  * [Setup](#setup)
-  * [Running tests](#running-tests)
-  * [Build](#build)
-  * [Lint](#lint)
-  * [Publish](#publish)
 <!-- TOC -->
-
-# Installation
-
-Run:
-
-```bash
-npm add @perspective-software/cross-origin-html-embed-server-sdk
-```
-
-To get the lastest version, run:
-
-```bash
-npm add @perspective-software/cross-origin-html-embed-server-sdk@latest
-```
 
 # Usage
 
@@ -62,7 +25,7 @@ npm add @perspective-software/cross-origin-html-embed-server-sdk@latest
 To allow only specific origins:
 
 ```typescript
-import { generateIframeHtml } from "@perspective-software/cross-origin-html-embed-server-sdk";
+import { generateIframeHtml } from "@perspective-software/cross-origin-html-embed/server";
 
 const iframeHtml = generateIframeHtml({
   allowAllOrigins: false,
@@ -73,7 +36,7 @@ const iframeHtml = generateIframeHtml({
 To allow all origins:
 
 ```typescript
-import { generateIframeHtml } from "@perspective-software/cross-origin-html-embed-server-sdk";
+import { generateIframeHtml } from "@perspective-software/cross-origin-html-embed/server";
 
 const iframeHtml = generateIframeHtml({
   allowAllOrigins: true,
@@ -95,16 +58,16 @@ const iframeHtml = generateIframeHtml({
 
 ## Folder
 
-We have also prepared some example under [examples/ 🔗](examples/).
+We have also prepared some example under [examples/ 🔗](./examples/).
 
 Clone the repository and check them out.
 
 ## Express
 
-There is also an example available: [Express Example 🔗](examples/express).
+There is also an example available: [Express Example 🔗](./examples/express).
 
 ```typescript
-import { generateIframeHtml } from "@perspective-software/cross-origin-html-embed-server-sdk";
+import { generateIframeHtml } from "@perspective-software/cross-origin-html-embed/server";
 import express from "express";
 
 const PORT = process.env.PORT || 4042;
@@ -127,12 +90,12 @@ app.listen(PORT, () => {
 
 ## Next.js App Router
 
-There is also an example available: [Next.js App Router Example 🔗](examples/nextjs-app-router).
+There is also an example available: [Next.js App Router Example 🔗](./examples/nextjs-app-router).
 
 ```typescript
 // app/route.ts
 
-import { generateIframeHtml } from "@perspective-software/cross-origin-html-embed-server-sdk";
+import { generateIframeHtml } from "@perspective-software/cross-origin-html-embed/server";
 
 export const dynamic = "force-dynamic"; // defaults to auto
 
@@ -158,56 +121,3 @@ Basically, you just need to
 - and return the HTML with the correct HTML mime-type.
 
 That's it.
-
-# Development
-
-Only for developers of the organization `Perspective-Software`.
-
-## Setup
-
-```bash
-nvm use
-node install
-```
-
-## Running tests
-
-```bash
-npm run test
-```
-
-With coverage:
-
-```bash
-npm run test:cov
-```
-
-## Build
-
-```bash
-npm run build
-```
-
-## Lint
-
-```bash
-npm run lint:fix
-```
-
-To just check the code:
-
-```bash
-npm run lint:check
-```
-
-## Publish
-
-- Increment `package.json` version.
-- Create a `CHANGELOG` entry.
-- Publish to npm.
-
-```bash
-npm publish
-```
-
-_(Runs tests, eslint and prettier before the actual publish step.)_

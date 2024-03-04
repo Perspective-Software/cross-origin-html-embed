@@ -21,7 +21,7 @@ bun dev
 
 # Test
 
-Now open [http://localhost:4043 🔗](http://localhost:4043) and inspect the
+Now open [http://localhost:4042 🔗](http://localhost:4042) and inspect the
 response HTML in the browser dev tools.
 
 Your console should also show the logo (if you haven't disabled branding).
