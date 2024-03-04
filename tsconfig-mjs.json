@@ -1,0 +1,18 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "module": "esnext",
+    "moduleResolution": "node",
+    "outDir": "./dist/mjs",
+    "target": "es2015",
+    "rootDir": "src/"
+  },
+  "exclude": [
+    "node_modules",
+    "./dist/**/*",
+    "./tests/**/*",
+    "./tests-utils/**/*",
+    "**/*.test.ts",
+    "**/*.spec.ts"
+  ]
+}
