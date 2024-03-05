@@ -150,7 +150,11 @@ To set up the helper page HTML, read the server side docs: [Server Docs 🔗](./
 
 ## Client side
 
-To set up the helper page HTML, read the server side docs: [Client Docs 🔗](./docs/client/README.md)
+To communicate with the helper page iframes successfully, check out the client docs: [Client Docs 🔗](./docs/client/README.md)
+
+## Static HTML Generator
+
+In case you want to rather host a static helper page HTML, you can also use the static side generator: [Static HTML Generator 🔗](https://cross-origin-html-embed-static-html-generator.vercel.app/) 
 
 # Scaling nr. of sandboxes
 
