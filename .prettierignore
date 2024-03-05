@@ -3,3 +3,4 @@ dist
 jest.config.ts
 examples
 README.md
+generator
