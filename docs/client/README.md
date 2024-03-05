@@ -7,26 +7,24 @@ iframe's content and receive size updates.
 # Table of contents
 
 <!-- TOC -->
-
 * [Client Functions](#client-functions)
 * [Table of contents](#table-of-contents)
 * [Glossary](#glossary)
 * [Usage](#usage)
-    * [Altering iframe content](#altering-iframe-content)
-        * [Set head content](#set-head-content)
-        * [Set body content](#set-body-content)
-        * [Options](#options)
-        * [Sending arbitrary host messages](#sending-arbitrary-host-messages)
-    * [Receiving iframe updates](#receiving-iframe-updates)
-        * [Dimensions updates](#dimensions-updates)
-        * [Remove listener](#remove-listener)
-        * [Options](#options-1)
-        * [Size and set content commands](#size-and-set-content-commands)
-        * [Receiving arbitrary iframe messages](#receiving-arbitrary-iframe-messages)
+  * [Altering iframe content](#altering-iframe-content)
+    * [Set head content](#set-head-content)
+    * [Set body content](#set-body-content)
+    * [Options](#options)
+    * [Sending arbitrary host messages](#sending-arbitrary-host-messages)
+  * [Receiving iframe updates](#receiving-iframe-updates)
+    * [Dimensions updates](#dimensions-updates)
+    * [Remove listener](#remove-listener)
+    * [Options](#options-1)
+    * [Size and set content commands](#size-and-set-content-commands)
+    * [Receiving arbitrary iframe messages](#receiving-arbitrary-iframe-messages)
 * [Examples](#examples)
-    * [Vanilla JS](#vanilla-js)
-    * [React](#react)
-
+  * [Vanilla JS](#vanilla-js)
+  * [React](#react)
 <!-- TOC -->
 
 # Glossary
