@@ -1,5 +1,5 @@
 import { describe, expect, test } from "@jest/globals";
-import { isValidIframeMessage } from "../../../src/client";
+import { isValidIframeMessage } from "../../../src";
 
 describe("isValidIframeMessage", () => {
   test("Yes", () => {

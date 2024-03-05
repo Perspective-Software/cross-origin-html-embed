@@ -45,6 +45,7 @@ export function createDomWithIframe(options: {
         const eventWithOrigin: MessageEvent = new event.constructor("message", {
           data: event.data,
           origin: iframeWindow.location.origin,
+          source: iframeWindow,
         });
 
         hostWindow.dispatchEvent(eventWithOrigin);

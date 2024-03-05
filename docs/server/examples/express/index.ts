@@ -1,4 +1,4 @@
-import { generateIframeHtml } from "@perspective-software/cross-origin-html-embed/server";
+import { generateIframeHtml } from "@perspective-software/cross-origin-html-embed";
 import express from "express";
 
 const PORT = process.env.PORT || 4042;
@@ -8,7 +8,7 @@ app.get("/", (_, res) => {
   // 🛡️ Here happens the magic
   const iframeHtml = generateIframeHtml({
     allowAllOrigins: false,
-    originWhitelist: ["https://app.myservice.com"],
+    originWhitelist: ["http://localhost:5173"],
   });
 
   res.send(iframeHtml);

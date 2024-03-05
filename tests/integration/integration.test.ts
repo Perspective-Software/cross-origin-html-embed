@@ -6,7 +6,7 @@ import {
   IframeDimensionsUpdateMessage,
   IframeMessage,
   isValidIframeMessage,
-  receiveIframeDimensionUpdates,
+  receiveIframeDimensionsUpdates,
   receiveIframeMessages,
   sendSetBodyContentMessage,
   sendSetHeadContentMessage,
@@ -110,15 +110,11 @@ describe("Integration tests with headless browser", () => {
   });
 
   test("Head content is added", async () => {
-    const { iframeWindow, iframeDocument } = await createSetup();
+    const { iframe, iframeDocument } = await createSetup();
 
-    sendSetHeadContentMessage(
-      iframeWindow,
-      "<meta name='hello' content='world'>",
-      {
-        targetOrigins: ["*"],
-      },
-    );
+    sendSetHeadContentMessage(iframe, "<meta name='hello' content='world'>", {
+      targetOrigins: ["*"],
+    });
 
     await pause(1);
 
@@ -128,9 +124,9 @@ describe("Integration tests with headless browser", () => {
   });
 
   test("Body content is added", async () => {
-    const { iframeWindow, iframeDocument } = await createSetup();
+    const { iframe, iframeDocument } = await createSetup();
 
-    sendSetBodyContentMessage(iframeWindow, "<h1>Hello World!</h1>", {
+    sendSetBodyContentMessage(iframe, "<h1>Hello World!</h1>", {
       targetOrigins: ["*"],
     });
 
@@ -142,10 +138,10 @@ describe("Integration tests with headless browser", () => {
   });
 
   test("Head inline scripts get executed", async () => {
-    const { iframeWindow } = await createSetup();
+    const { iframe, iframeWindow } = await createSetup();
 
     sendSetHeadContentMessage(
-      iframeWindow,
+      iframe,
       "<script>window.RICK_AND = 'MORTY';</script>",
       {
         targetOrigins: ["*"],
@@ -160,10 +156,10 @@ describe("Integration tests with headless browser", () => {
   });
 
   test("Body inline scripts get executed", async () => {
-    const { iframeWindow } = await createSetup();
+    const { iframe, iframeWindow } = await createSetup();
 
     sendSetBodyContentMessage(
-      iframeWindow,
+      iframe,
       "<script>window.MR_MEE = 'SEEKS';</script>",
       {
         targetOrigins: ["*"],
@@ -178,10 +174,10 @@ describe("Integration tests with headless browser", () => {
   });
 
   test("Head external scripts are loaded", async () => {
-    const { iframeWindow } = await createSetup();
+    const { iframe, iframeWindow } = await createSetup();
 
     sendSetHeadContentMessage(
-      iframeWindow,
+      iframe,
       `<script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>`,
       {
         targetOrigins: ["*"],
@@ -199,10 +195,10 @@ describe("Integration tests with headless browser", () => {
   });
 
   test("Body external scripts are loaded", async () => {
-    const { iframeWindow } = await createSetup();
+    const { iframe, iframeWindow } = await createSetup();
 
     sendSetBodyContentMessage(
-      iframeWindow,
+      iframe,
       `<script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>`,
       {
         targetOrigins: ["*"],
@@ -223,7 +219,7 @@ describe("Integration tests with headless browser", () => {
     const { iframeWindow, iframeDocument } = await createSetup();
 
     let receivedMessage: IframeDimensionsUpdateMessage | null = null;
-    receiveIframeDimensionUpdates("*", (message) => {
+    receiveIframeDimensionsUpdates("*", (message) => {
       receivedMessage = message;
     });
 
@@ -242,7 +238,7 @@ describe("Integration tests with headless browser", () => {
   });
 
   test("ResizeObserver triggers size update message", async () => {
-    const { iframeWindow, iframeDocument } = await createSetup();
+    const { iframeWindow } = await createSetup();
 
     let receivedMessage: IframeMessage | null = null;
     receiveIframeMessages("*", (message) => {

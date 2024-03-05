@@ -1,5 +1,5 @@
 import { describe, test, expect } from "@jest/globals";
-import { isValidHostMessage } from "../../../src/client";
+import { isValidHostMessage } from "../../../src";
 
 describe("isValidHostMessage", () => {
   test("Yes", () => {

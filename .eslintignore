@@ -2,3 +2,6 @@ jest.config.ts
 examples
 dist
 node_modules
+coverage
+test-utils
+tests

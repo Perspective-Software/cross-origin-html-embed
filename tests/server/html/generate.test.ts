@@ -1,7 +1,7 @@
 import { describe, test, expect } from "@jest/globals";
-import { generateIframeHtml } from "../../../src/server";
+import { generateIframeHtml } from "../../../src";
 import { ConstructorOptions, JSDOM } from "jsdom";
-import { GenerateIframeHtmlOptions } from "../../../src/server";
+import { GenerateIframeHtmlOptions } from "../../../src";
 import { pause } from "../../../test-utils/pause";
 
 const TEST_URL = new URL("https://subdomain.morty.com");

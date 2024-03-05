@@ -20,7 +20,6 @@ This library offers you a **toolkit** to build HTML "sandboxes" where
 you can run/display arbitrary (e.g. user provided) HTML in – securely.
 
 We make use of iframes and cross-origin principles.
-To better understand this, let's write down the expectations.
 
 ![Visualization of building an HTML sandbox using a cross-origin iframe](./assets/concept.png)
 
@@ -29,8 +28,9 @@ To better understand this, let's write down the expectations.
 <!-- TOC -->
 * [Cross-Origin HTML Embed](#cross-origin-html-embed)
 * [Table of contents](#table-of-contents)
-* [Expectations](#expectations)
-* [Cross-origin](#cross-origin)
+* [Concept](#concept)
+  * [Expectations](#expectations)
+  * [Cross-origin](#cross-origin)
   * [Hosting](#hosting)
   * [Helper HTML for dynamic content](#helper-html-for-dynamic-content)
   * [Lifecycle](#lifecycle)
@@ -43,6 +43,7 @@ To better understand this, let's write down the expectations.
   * [Wildcard subdomains](#wildcard-subdomains)
   * [Subdomain prefixing](#subdomain-prefixing)
 * [Examples](#examples)
+* [Features](#features)
 * [Development](#development)
   * [Setup](#setup)
   * [Running tests](#running-tests)
@@ -51,7 +52,9 @@ To better understand this, let's write down the expectations.
   * [Publish](#publish)
 <!-- TOC -->
 
-# Expectations
+# Concept
+
+## Expectations
 
 Custom code that is being run/displayed (inside our sandboxes) __must not be able__ to
 - access the LocalStorage of our website/web-app
@@ -61,7 +64,7 @@ Custom code that is being run/displayed (inside our sandboxes) __must not be abl
 - interact with our site/app in general
 - ... and so on ...
 
-# Cross-origin
+## Cross-origin
 
 Imagine we have a host site and an iframe inside it.
 
@@ -185,6 +188,14 @@ Thanks to the wildcard subdomain you have total flexibility.
 We advise you to have a look at both the [Server Docs 🔗](./docs/server/README.md) and the [Client Docs 🔗](./docs/client/README.md).
 
 They both link to server and client examples.
+
+# Features
+
+- fully tested
+- written in TypeScript
+- tree-shakable
+- CJS support
+- MJS/ESM support
 
 # Development
 

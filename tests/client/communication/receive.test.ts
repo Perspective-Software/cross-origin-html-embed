@@ -2,9 +2,10 @@ import { beforeEach, describe, expect, test } from "@jest/globals";
 import {
   IframeMessage,
   isValidIframeMessage,
-  receiveIframeDimensionUpdates,
+  receiveIframeDimensionsUpdates,
   receiveIframeMessages,
-} from "../../../src/client";
+  ReceiveIframeMessagesOptions,
+} from "../../../src";
 import { beforeAllCreateTestServer } from "../../../test-utils/testServer";
 import { pause } from "../../../test-utils/pause";
 import { createDomWithIframe } from "../../../test-utils/dom";
@@ -24,7 +25,7 @@ describe("receiveIframeMessages", () => {
   );
 });
 
-describe("receiveIframeDimensionUpdates", () => {
+describe("receiveIframeDimensionsUpdates", () => {
   testScenarios<IframeMessage>(
     {
       message: {
@@ -42,7 +43,7 @@ describe("receiveIframeDimensionUpdates", () => {
         } as unknown as IframeMessage,
       ],
     },
-    receiveIframeDimensionUpdates,
+    receiveIframeDimensionsUpdates,
   );
 });
 
@@ -52,8 +53,9 @@ function testScenarios<M extends IframeMessage>(
     messagesToBeNotReceived: IframeMessage[] | null;
   },
   receive: (
-    originOrIframeOrWindow: string | string[] | HTMLIFrameElement | Window,
+    originOrIframe: string | string[] | HTMLIFrameElement,
     callback: (message: M) => void,
+    options?: ReceiveIframeMessagesOptions,
   ) => () => void,
 ) {
   const hostUrl = "https://send.picklerick.com";
@@ -106,12 +108,25 @@ function testScenarios<M extends IframeMessage>(
     (global as unknown as Record<string, unknown>).window = globalWindow;
   });
 
-  test("Null window throws error", () => {
+  test("Null iframe throws error", () => {
     const { hostWindow } = createTestSetup();
     (global as unknown as Record<string, unknown>).window = hostWindow;
 
     expect(() => {
-      receive(null as unknown as Window, () => undefined);
+      receive(null as unknown as HTMLIFrameElement, () => undefined);
+    }).toThrow();
+  });
+
+  test("Iframe with empty src throws error", () => {
+    const { hostWindow, iframe } = createTestSetup();
+    (global as unknown as Record<string, unknown>).window = hostWindow;
+
+    iframe.src = "";
+
+    expect(() => {
+      receive(iframe, () => undefined, {
+        iframeEmitterCheck: "sourceOrOriginCheck",
+      });
     }).toThrow();
   });
 
@@ -121,35 +136,7 @@ function testScenarios<M extends IframeMessage>(
     }).toThrow();
   });
 
-  test("Null origin throws error", () => {
-    expect(() => {
-      receive(
-        {
-          location: { origin: null },
-        } as unknown as Window,
-        () => undefined,
-      );
-    }).toThrow();
-  });
-
-  test("Non accessible origin throws error", () => {
-    expect(() => {
-      const windowMock = {
-        location: new Proxy(
-          {},
-          {
-            get() {
-              throw new Error();
-            },
-          },
-        ),
-      } as unknown as Window;
-
-      receive(windowMock, () => undefined);
-    }).toThrow();
-  });
-
-  test("Receive with iframe element", async () => {
+  test("Receive with iframe element (strict source check)", async () => {
     const { hostWindow, iframe, iframeWindow, iframeOnLoadPromise } =
       createTestSetup();
     (global as unknown as Record<string, unknown>).window = hostWindow;
@@ -172,16 +159,58 @@ function testScenarios<M extends IframeMessage>(
     expect(isValidIframeMessage(receivedMessage)).toBe(true);
   });
 
-  test("Receive with window element", async () => {
-    const { hostWindow, iframeWindow, iframeOnLoadPromise } = createTestSetup();
+  test("Receive with iframe element (sourceOrOriginCheck mode)", async () => {
+    const { hostWindow, iframe, iframeWindow, iframeOnLoadPromise } =
+      createTestSetup();
     (global as unknown as Record<string, unknown>).window = hostWindow;
     await iframeOnLoadPromise;
 
     let receivedMessage: M | null = null;
 
-    receive(iframeWindow, (message) => {
-      receivedMessage = message;
+    receive(
+      iframe,
+      (message) => {
+        receivedMessage = message;
+      },
+      { iframeEmitterCheck: "sourceOrOriginCheck" },
+    );
+
+    // This tells our test server HTML to execute "postMessage" with our data.message.
+    iframeWindow.postMessage({ executePostMessage: true }, "*");
+
+    // JSDOM needs some execution slot to process message event listeners.
+    await pause(10);
+
+    expect(receivedMessage).toBeTruthy();
+    expect(receivedMessage).toEqual(data.message);
+    expect(isValidIframeMessage(receivedMessage)).toBe(true);
+  });
+
+  test("Receive with iframe element (sourceOrOriginCheck mode) but null contentWindow", async () => {
+    const { hostWindow, iframe, iframeWindow, iframeOnLoadPromise } =
+      createTestSetup();
+    (global as unknown as Record<string, unknown>).window = hostWindow;
+    await iframeOnLoadPromise;
+
+    let receivedMessage: M | null = null;
+
+    const iframeWithNullContentWindow: HTMLIFrameElement = new Proxy(iframe, {
+      get(target: HTMLIFrameElement, p: string, receiver: any): any {
+        if (p === "contentWindow") {
+          return null;
+        }
+
+        return (target as unknown as Record<string, unknown>)[p];
+      },
     });
+
+    receive(
+      iframeWithNullContentWindow,
+      (message) => {
+        receivedMessage = message;
+      },
+      { iframeEmitterCheck: "sourceOrOriginCheck" },
+    );
 
     // This tells our test server HTML to execute "postMessage" with our data.message.
     iframeWindow.postMessage({ executePostMessage: true }, "*");
@@ -195,8 +224,7 @@ function testScenarios<M extends IframeMessage>(
   });
 
   test("Receive with single origin", async () => {
-    const { hostWindow, iframe, iframeWindow, iframeOnLoadPromise } =
-      createTestSetup();
+    const { hostWindow, iframeWindow, iframeOnLoadPromise } = createTestSetup();
     (global as unknown as Record<string, unknown>).window = hostWindow;
     await iframeOnLoadPromise;
 
@@ -218,8 +246,7 @@ function testScenarios<M extends IframeMessage>(
   });
 
   test("Receive with asterisk", async () => {
-    const { hostWindow, iframe, iframeWindow, iframeOnLoadPromise } =
-      createTestSetup();
+    const { hostWindow, iframeWindow, iframeOnLoadPromise } = createTestSetup();
     (global as unknown as Record<string, unknown>).window = hostWindow;
     await iframeOnLoadPromise;
 
@@ -241,8 +268,7 @@ function testScenarios<M extends IframeMessage>(
   });
 
   test("Receive with multiple origins", async () => {
-    const { hostWindow, iframe, iframeWindow, iframeOnLoadPromise } =
-      createTestSetup();
+    const { hostWindow, iframeWindow, iframeOnLoadPromise } = createTestSetup();
     (global as unknown as Record<string, unknown>).window = hostWindow;
     await iframeOnLoadPromise;
 
@@ -264,8 +290,7 @@ function testScenarios<M extends IframeMessage>(
   });
 
   test("Ignore unknown origin", async () => {
-    const { hostWindow, iframe, iframeWindow, iframeOnLoadPromise } =
-      createTestSetup();
+    const { hostWindow, iframeWindow, iframeOnLoadPromise } = createTestSetup();
     (global as unknown as Record<string, unknown>).window = hostWindow;
     await iframeOnLoadPromise;
 
@@ -285,8 +310,7 @@ function testScenarios<M extends IframeMessage>(
   });
 
   test("Unlisten removes message listener", async () => {
-    const { hostWindow, iframe, iframeWindow, iframeOnLoadPromise } =
-      createTestSetup();
+    const { hostWindow, iframeWindow, iframeOnLoadPromise } = createTestSetup();
     (global as unknown as Record<string, unknown>).window = hostWindow;
     await iframeOnLoadPromise;
 
@@ -318,7 +342,7 @@ function testScenarios<M extends IframeMessage>(
 
   if (data.messagesToBeNotReceived && data.messagesToBeNotReceived.length > 0) {
     test("Not receiving other message types", async () => {
-      const { hostWindow, iframe, iframeWindow, iframeOnLoadPromise } =
+      const { hostWindow, iframeWindow, iframeOnLoadPromise } =
         createTestSetup();
       (global as unknown as Record<string, unknown>).window = hostWindow;
       await iframeOnLoadPromise;

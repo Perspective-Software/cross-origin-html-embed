@@ -25,7 +25,7 @@ HTML (files) and serve them.
 To allow only specific origins:
 
 ```typescript
-import { generateIframeHtml } from "@perspective-software/cross-origin-html-embed/server";
+import { generateIframeHtml } from "@perspective-software/cross-origin-html-embed";
 
 const iframeHtml = generateIframeHtml({
   allowAllOrigins: false,
@@ -36,7 +36,7 @@ const iframeHtml = generateIframeHtml({
 To allow all origins:
 
 ```typescript
-import { generateIframeHtml } from "@perspective-software/cross-origin-html-embed/server";
+import { generateIframeHtml } from "@perspective-software/cross-origin-html-embed";
 
 const iframeHtml = generateIframeHtml({
   allowAllOrigins: true,
@@ -67,7 +67,7 @@ Clone the repository and check them out.
 There is also an example available: [Express Example 🔗](./examples/express).
 
 ```typescript
-import { generateIframeHtml } from "@perspective-software/cross-origin-html-embed/server";
+import { generateIframeHtml } from "@perspective-software/cross-origin-html-embed";
 import express from "express";
 
 const PORT = process.env.PORT || 4042;
@@ -95,7 +95,7 @@ There is also an example available: [Next.js App Router Example 🔗](./examples
 ```typescript
 // app/route.ts
 
-import { generateIframeHtml } from "@perspective-software/cross-origin-html-embed/server";
+import { generateIframeHtml } from "@perspective-software/cross-origin-html-embed";
 
 export const dynamic = "force-dynamic"; // defaults to auto
 

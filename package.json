@@ -1,6 +1,6 @@
 {
   "name": "@perspective-software/cross-origin-html-embed",
-  "version": "1.0.0",
+  "version": "1.1.2",
   "keywords": [
     "cross",
     "origin",
@@ -28,7 +28,6 @@
   },
   "files": [
     "/dist",
-    "/docs",
     "CHANGELOG.md",
     "README.md",
     "LICENSE"

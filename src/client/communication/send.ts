@@ -6,58 +6,44 @@ export type SendHostMessageOptions = {
 
 /**
  * Sends an arbitrary host message to an iframe.
- * By default, the targetOrigin is taken from the iframe/window object.
+ * By default, the targetOrigin is taken from the iframe's src attribute.
  * You can override the targetOrigin(s) via the "options" parameter.
  *
- * @param iframeOrWindow Target iframe or its window.
+ * @param iframe Target iframe.
  * @param message Message to be sent.
  * @param options Optional.
  */
 export const sendHostMessage = /* #__PURE__ */ function (
-  iframeOrWindow: HTMLIFrameElement | Window,
+  iframe: HTMLIFrameElement,
   message: Message,
   options?: SendHostMessageOptions,
 ) {
-  let window: Window | null = null;
+  const iframeWindow: Window | null = iframe.contentWindow;
 
-  // Get window
-  if (
-    iframeOrWindow &&
-    (iframeOrWindow as any).nodeType === 1 &&
-    (iframeOrWindow as any).tagName === "IFRAME"
-  ) {
-    window = (iframeOrWindow as HTMLIFrameElement).contentWindow;
-  } else {
-    window = iframeOrWindow as Window;
-  }
-
-  if (window === null) {
+  if (iframeWindow === null) {
     throw new Error(
       "Could not get the window object. Try altering the iframe settings.",
     );
   }
 
   // Get origin(s)
-  let targetOrigins = [];
+  let targetOrigins: string[] = [];
 
   if (options && options.targetOrigins) {
     targetOrigins = options.targetOrigins;
   } else {
-    let windowOrigin = null;
+    let srcOrigin: string = "";
+    const srcAttribute = iframe.getAttribute("src");
 
-    try {
-      windowOrigin = window.location.origin;
-    } catch (e) {
-      throw new Error(
-        `Could not infer window origin automatically. Either change the iframe settings or specify 'options.origins' manually. (${e})`,
-      );
+    if (srcAttribute && srcAttribute.length > 0) {
+      srcOrigin = new URL(srcAttribute, window.location.href).origin;
     }
 
-    if (!windowOrigin || windowOrigin === "null") {
-      throw new Error("window's origin was undefined or null.");
+    if (srcOrigin.length === 0) {
+      throw new Error("Iframe's src was not set or empty.");
     }
 
-    targetOrigins = [windowOrigin];
+    targetOrigins.push(srcOrigin);
   }
 
   if (targetOrigins.length === 0) {
@@ -65,27 +51,27 @@ export const sendHostMessage = /* #__PURE__ */ function (
   }
 
   for (const targetOrigin of targetOrigins) {
-    window.postMessage(message, targetOrigin);
+    iframeWindow.postMessage(message, targetOrigin);
   }
 };
 
 /**
  * Sends a "set head content" message to the given iframe/window.
- * By default, the targetOrigin is taken from the iframe/window object.
+ * By default, the targetOrigin is taken from the iframe's src attribute.
  * You can override the targetOrigin(s) via the "options" parameter.
  * Uses "sendHostMessage" under the hood.
  *
- * @param iframeOrWindow Target iframe or its window.
+ * @param iframe Target iframe or its window.
  * @param headContent Content for iframe head element.
  * @param options Optional.
  */
 export const sendSetHeadContentMessage = /* #__PURE__ */ function (
-  iframeOrWindow: HTMLIFrameElement | Window,
+  iframe: HTMLIFrameElement,
   headContent: string,
   options?: SendHostMessageOptions,
 ) {
   sendHostMessage(
-    iframeOrWindow,
+    iframe,
     {
       isCrossOriginHtmlEmbedMessage: true,
       source: "host",
@@ -98,21 +84,21 @@ export const sendSetHeadContentMessage = /* #__PURE__ */ function (
 
 /**
  * Sends a "set body content" message to the given iframe/window.
- * By default, the targetOrigin is taken from the iframe/window object.
+ * By default, the targetOrigin is taken from the iframe's src attribute.
  * You can override the targetOrigin(s) via the "options" parameter.
  * Uses "sendHostMessage" under the hood.
  *
- * @param iframeOrWindow Target iframe or its window.
+ * @param iframe Target iframe or its window.
  * @param bodyContent Content for Embed Guard body element.
  * @param options Optional.
  */
 export const sendSetBodyContentMessage = /* #__PURE__ */ function (
-  iframeOrWindow: HTMLIFrameElement | Window,
+  iframe: HTMLIFrameElement,
   bodyContent: string,
   options?: SendHostMessageOptions,
 ) {
   sendHostMessage(
-    iframeOrWindow,
+    iframe,
     {
       isCrossOriginHtmlEmbedMessage: true,
       source: "host",

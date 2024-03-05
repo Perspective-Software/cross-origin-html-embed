@@ -5,7 +5,8 @@
     "moduleResolution": "node",
     "outDir": "./dist/mjs",
     "target": "es2015",
-    "rootDir": "src/"
+    "rootDir": "src/",
+    "removeComments": false
   },
   "exclude": [
     "node_modules",

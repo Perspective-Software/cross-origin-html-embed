@@ -14,15 +14,9 @@
 
     "strict": true,
     "skipLibCheck": true,
-     "noImplicitAny": true,
-     "noImplicitThis": true
+    "noImplicitAny": true,
+    "noImplicitThis": true
   },
-  "include": [
-    "./src/**/*",
-    "./tests/**/*"
-  ],
-  "exclude": [
-    "node_modules",
-    "./dist/**/*",
-  ]
+  "include": ["./src/**/*", "./tests/**/*"],
+  "exclude": ["node_modules", "./dist/**/*"]
 }

@@ -6,18 +6,14 @@ export type HostBaseMessage = BaseMessage & {
   source: HostSource;
 };
 
-export type HostSetHeadContentMessage =
-  HostBaseMessage & {
-    type: "set-head-content";
-    data: string;
-  };
+export type HostSetHeadContentMessage = HostBaseMessage & {
+  type: "set-head-content";
+  data: string;
+};
 
-export type HostSetBodyContentMessage =
-  HostBaseMessage & {
-    type: "set-body-content";
-    data: string;
-  };
+export type HostSetBodyContentMessage = HostBaseMessage & {
+  type: "set-body-content";
+  data: string;
+};
 
-export type HostMessage =
-  | HostSetHeadContentMessage
-  | HostSetBodyContentMessage;
+export type HostMessage = HostSetHeadContentMessage | HostSetBodyContentMessage;

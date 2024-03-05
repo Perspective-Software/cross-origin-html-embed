@@ -1,4 +1,4 @@
-import { describe, expect, jest, test } from "@jest/globals";
+import { beforeEach, describe, expect, jest, test } from "@jest/globals";
 import {
   HostMessage,
   HostSetBodyContentMessage,
@@ -9,7 +9,7 @@ import {
   SendHostMessageOptions,
   sendSetBodyContentMessage,
   sendSetHeadContentMessage,
-} from "../../../src/client";
+} from "../../../src";
 import { beforeAllCreateTestServer } from "../../../test-utils/testServer";
 import { pause } from "../../../test-utils/pause";
 import { createDomWithIframe } from "../../../test-utils/dom";
@@ -62,7 +62,7 @@ function testSendScenarios<S, R extends Message>(
   dataToSend: S,
   expectedReceivedMessage: R,
   sendMethod: (
-    iframeOrWindow: HTMLIFrameElement | Window,
+    iframe: HTMLIFrameElement,
     data: S,
     options?: SendHostMessageOptions,
   ) => void,
@@ -86,49 +86,41 @@ function testSendScenarios<S, R extends Message>(
     });
   }
 
-  test("Error window null", () => {
+  // Reset global window object
+  const globalWindow: unknown = global.window;
+  beforeEach(() => {
+    (global as unknown as Record<string, unknown>).window = globalWindow;
+  });
+
+  test("Empty iframe src throws error", async () => {
+    const { iframe, iframeOnLoadPromise } = createTestSetup();
+    await iframeOnLoadPromise;
+
+    iframe.src = "";
+
     expect(() => {
-      sendMethod(null as unknown as Window, dataToSend);
+      sendMethod(iframe, dataToSend);
     }).toThrow();
   });
 
   test("Empty origin list throws error", () => {
-    const { iframeWindow } = createTestSetup();
+    const { iframe } = createTestSetup();
     expect(() => {
-      sendMethod(iframeWindow, dataToSend, { targetOrigins: [] });
+      sendMethod(iframe, dataToSend, { targetOrigins: [] });
     }).toThrow();
   });
 
-  test("Null origin throws error", () => {
-    expect(() => {
-      sendMethod(
-        {
-          location: { origin: null },
-        } as unknown as Window,
-        dataToSend,
-      );
-    }).toThrow();
-  });
+  test("null contentWindow throws error", () => {
+    const { iframe } = createTestSetup();
 
-  test("Non accessible origin throws error", () => {
     expect(() => {
-      const windowMock = {
-        location: new Proxy(
-          {},
-          {
-            get() {
-              throw new Error();
-            },
-          },
-        ),
-      } as unknown as Window;
-
-      sendMethod(windowMock, dataToSend);
+      sendMethod({ ...iframe, contentWindow: null }, dataToSend);
     }).toThrow();
   });
 
   test("Send with iframe element (targetOrigin auto resolved)", async () => {
-    const { iframe, iframeWindow } = createTestSetup();
+    const { iframe, iframeWindow, hostWindow } = createTestSetup();
+    (global as unknown as Record<string, unknown>).window = hostWindow;
 
     let receivedValidHostMessage = false;
     let receivedMessage: null | R = null;
@@ -156,37 +148,8 @@ function testSendScenarios<S, R extends Message>(
     expect(receivedMessage).toStrictEqual(expectedReceivedMessage);
   });
 
-  test("Send with window element (targetOrigin auto resolved)", async () => {
-    const { iframeWindow } = createTestSetup();
-
-    let receivedValidHostMessage = false;
-    let receivedMessage: null | R = null;
-
-    iframeWindow.addEventListener("message", (event) => {
-      if (isValidMessageCheck(event.data)) {
-        receivedValidHostMessage = true;
-        receivedMessage = event.data as R;
-      }
-    });
-
-    const iframeWindowSpy = jest.spyOn(iframeWindow, "postMessage");
-
-    sendMethod(iframeWindow, dataToSend);
-
-    // JSDOM needs some execution time to process the "message" event listener.
-    await pause(10);
-
-    expect(iframeWindowSpy).toHaveBeenCalledWith(
-      expectedReceivedMessage,
-      getIframeSrc(),
-    );
-
-    expect(receivedValidHostMessage).toBe(true);
-    expect(receivedMessage).toStrictEqual(expectedReceivedMessage);
-  });
-
   test("Send with explicit targetOrigin", async () => {
-    const { iframeWindow } = createTestSetup();
+    const { iframe, iframeWindow } = createTestSetup();
 
     let receivedValidHostMessage = false;
     let receivedMessage: null | R = null;
@@ -200,7 +163,7 @@ function testSendScenarios<S, R extends Message>(
 
     const iframeWindowSpy = jest.spyOn(iframeWindow, "postMessage");
 
-    sendMethod(iframeWindow, dataToSend, {
+    sendMethod(iframe, dataToSend, {
       targetOrigins: [getIframeSrc()],
     });
 
@@ -217,7 +180,7 @@ function testSendScenarios<S, R extends Message>(
   });
 
   test("Send with multiple explicit targetOrigin", async () => {
-    const { iframeWindow } = createTestSetup();
+    const { iframe, iframeWindow } = createTestSetup();
 
     let receivedValidHostMessage = false;
     let receivedMessage: null | R = null;
@@ -231,7 +194,7 @@ function testSendScenarios<S, R extends Message>(
 
     const iframeWindowSpy = jest.spyOn(iframeWindow, "postMessage");
 
-    sendMethod(iframeWindow, dataToSend, {
+    sendMethod(iframe, dataToSend, {
       targetOrigins: ["https://test.abc.def.localhost", getIframeSrc()],
     });
 
@@ -252,7 +215,7 @@ function testSendScenarios<S, R extends Message>(
   });
 
   test("Send with explicit asterisk targetOrigin", async () => {
-    const { iframeWindow } = createTestSetup();
+    const { iframeWindow, iframe } = createTestSetup();
 
     let receivedValidHostMessage = false;
     let receivedMessage: null | R = null;
@@ -266,7 +229,7 @@ function testSendScenarios<S, R extends Message>(
 
     const iframeWindowSpy = jest.spyOn(iframeWindow, "postMessage");
 
-    sendMethod(iframeWindow, dataToSend, {
+    sendMethod(iframe, dataToSend, {
       targetOrigins: ["*"],
     });
 
@@ -280,7 +243,7 @@ function testSendScenarios<S, R extends Message>(
   });
 
   test("Send with explicit incorrect targetOrigin", async () => {
-    const { iframeWindow } = createTestSetup();
+    const { iframe, iframeWindow } = createTestSetup();
 
     let receivedValidHostMessage = false;
     let receivedMessage: null | R = null;
@@ -294,7 +257,7 @@ function testSendScenarios<S, R extends Message>(
 
     const iframeWindowSpy = jest.spyOn(iframeWindow, "postMessage");
 
-    sendMethod(iframeWindow, dataToSend, {
+    sendMethod(iframe, dataToSend, {
       targetOrigins: ["https://test.abc.def.localhost:12345"],
     });
 

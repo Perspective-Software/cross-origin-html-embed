@@ -9,7 +9,7 @@
     "lint": "node_modules/.bin/next lint"
   },
   "dependencies": {
-    "@perspective-software/cross-origin-html-embed": "^1.0.0",
+    "@perspective-software/cross-origin-html-embed": "^1.1.2",
     "next": "14.1.0",
     "react": "^18",
     "react-dom": "^18"

@@ -5,6 +5,4 @@ export type BaseMessage = {
   isCrossOriginHtmlEmbedMessage: true;
 };
 
-export type Message =
-  | IframeMessage
-  | HostMessage;
+export type Message = IframeMessage | HostMessage;
