@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/logo.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Static HTML Generator</title>
+  </head>
+  <body>
+    <h1>Cross-Origin HTML Embed</h1>
+    <p>
+      GitHub Repository: <a href="https://github.com/Perspective-Software/cross-origin-html-embed">https://github.com/Perspective-Software/cross-origin-html-embed</a>
+    </p>
+    <h2>Generate helper page HTML for iframe</h2>
+    <div class="inputs">
+      <label>
+        Name*
+        <input name="name" placeholder="Enter a name">
+      </label>
+
+      <div></div>
+
+      <label>
+        Origin Whitelist (don't forget protocols)
+        <input name="originWhitelist" placeholder="Enter a comma separated list of origins (with protocols)">
+      </label>
+
+      <label>
+        Allow all origins
+        <input type="checkbox" name="allowAllOrigins">
+      </label>
+
+      <label>
+        Canonical URL
+        <input name="canonicalUrl" placeholder="Enter a canonical URL">
+      </label>
+
+      <label>
+        Disable logo console.log
+        <input type="checkbox" name="hideBranding">
+      </label>
+    </div>
+
+    <div></div>
+
+    <div id="errorMessage"></div>
+
+    <label>
+      HTML output
+      <textarea readonly id="output"></textarea>
+    </label>
+    <script type="module" src="/src/main.ts"></script>
+  </body>
+</html>
