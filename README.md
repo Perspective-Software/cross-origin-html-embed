@@ -39,6 +39,7 @@ We make use of iframes and cross-origin principles.
 * [Usage](#usage)
   * [Server side](#server-side)
   * [Client side](#client-side)
+  * [Static HTML Generator](#static-html-generator)
 * [Scaling nr. of sandboxes](#scaling-nr-of-sandboxes)
   * [Wildcard subdomains](#wildcard-subdomains)
   * [Subdomain prefixing](#subdomain-prefixing)

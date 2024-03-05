@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.1.4
+
+### Updated
+
+- Updated/corrected README.
+
 ## 1.1.3
 
 ### Updated
