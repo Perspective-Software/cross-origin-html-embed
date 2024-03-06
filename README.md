@@ -6,9 +6,10 @@
 </p>
 
 <p align="center">
-  <img alt="JavaScript | TypeScript" src="https://img.shields.io/badge/JavaScript-TypeScript-blue">
+  <img alt="Types included" src="https://badgen.net/npm/types/tslib">
+  <img alt="License MIT" src="https://badgen.net/npm/license/@perspective-software/cross-origin-html-embed">
   <a href="https://www.npmjs.com/package/@perspective-software/cross-origin-html-embed">
-    <img alt="npm" src="https://img.shields.io/npm/v/@perspective-software/cross-origin-html-embed?color=%23e62770&label=NPM">
+    <img alt="npm version" src="https://badgen.net/npm/v/@perspective-software/cross-origin-html-embed">
   </a>
   <br>
   <br>
