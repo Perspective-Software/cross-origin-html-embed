@@ -13,6 +13,6 @@
     "vite": "^5.1.4"
   },
   "dependencies": {
-    "@perspective-software/cross-origin-html-embed": "^1.1.2"
+    "@perspective-software/cross-origin-html-embed": "^1.1.6"
   }
 }

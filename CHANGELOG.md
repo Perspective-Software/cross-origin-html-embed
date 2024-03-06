@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.1.6
+
+## Fixed
+
+- Checking if running inside iframe based on `window.parent` and not `window.top`.
+
 ## 1.1.5
 
 ## Fixed

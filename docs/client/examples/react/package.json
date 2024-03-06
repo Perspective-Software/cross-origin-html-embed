@@ -10,7 +10,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "@perspective-software/cross-origin-html-embed": "^1.1.2",
+    "@perspective-software/cross-origin-html-embed": "^1.1.6",
     "react": "^18.2.0",
     "react-dom": "^18.2.0"
   },

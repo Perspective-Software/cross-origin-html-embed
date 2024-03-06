@@ -55,12 +55,12 @@ export const generateIframeHtml = /* #__PURE__ */ function (
               ${!options.hideBranding ? `console.log("%c\\n${LogoAsciiArt}\\n\\n", "font-family: monospace;");` : ""}
               
               function sendDimensionsUpdate() {
-                  if ( window === window.top ) {
+                  if ( window === window.parent ) {
                       return
                   }
                   
                   for ( const origin of ${stringifiedWhitelistedOrigins} ) {
-                      parent.postMessage({
+                      window.parent.postMessage({
                           isCrossOriginHtmlEmbedMessage: true,
                           source: "iframe",
                           type: "dimensions-update",
