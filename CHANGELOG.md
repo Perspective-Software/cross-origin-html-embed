@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.1.5
+
+## Fixed
+
+- `dist/mjs` is now post-processed with library `tsc-esm-fix` to add `.js` suffix to all imports.
+
 ## 1.1.4
 
 ### Updated
