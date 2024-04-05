@@ -21,10 +21,12 @@ function createTestHtml(overrideOptions?: Partial<GenerateIframeHtmlOptions>) {
   });
 }
 
-function createTestHtmlAndReturnDocument(
+function createTestHtmlAndReturnContext(
   overrideOptions?: Partial<GenerateIframeHtmlOptions>,
+  jsdomOptions?: Partial<ConstructorOptions>,
 ) {
-  return new JSDOM(createTestHtml(overrideOptions)).window.document;
+  const dom = new JSDOM(createTestHtml(overrideOptions), jsdomOptions);
+  return { dom, window: dom.window, document: dom.window.document };
 }
 
 function getChildNodesWithoutTextNodes(element: HTMLElement) {
@@ -38,17 +40,17 @@ describe("generateIframeHtml static tests", () => {
   });
 
   test("Has head node", () => {
-    const document = createTestHtmlAndReturnDocument();
+    const { document } = createTestHtmlAndReturnContext();
     expect(document.head).toBeTruthy();
   });
 
   test("Head has title tag", () => {
-    const document = createTestHtmlAndReturnDocument();
+    const { document } = createTestHtmlAndReturnContext();
     expect(document.head.querySelector("title")).toBeTruthy();
   });
 
   test("Head has viewport meta tag", () => {
-    const document = createTestHtmlAndReturnDocument();
+    const { document } = createTestHtmlAndReturnContext();
     const viewportMetaNode = document.head.querySelector(
       "meta[name='viewport']",
     );
@@ -60,7 +62,7 @@ describe("generateIframeHtml static tests", () => {
   });
 
   test("Head has utf-8 charset meta tag", () => {
-    const document = createTestHtmlAndReturnDocument();
+    const { document } = createTestHtmlAndReturnContext();
     const viewportMetaNode = document.head.querySelector(
       "meta[charset='UTF-8']",
     );
@@ -69,14 +71,14 @@ describe("generateIframeHtml static tests", () => {
   });
 
   test("Head has no favicon tag by default", () => {
-    const document = createTestHtmlAndReturnDocument();
+    const { document } = createTestHtmlAndReturnContext();
     const faviconNode = document.head.querySelector("link[rel='icon']");
 
     expect(faviconNode).toBeFalsy();
   });
 
   test("Head has favicon tag if configured", () => {
-    const document = createTestHtmlAndReturnDocument({
+    const { document } = createTestHtmlAndReturnContext({
       favicon: {
         href: "/my-favicon.png",
         type: "image/png",
@@ -90,7 +92,7 @@ describe("generateIframeHtml static tests", () => {
   });
 
   test("Head has canonical url tag", () => {
-    const document = createTestHtmlAndReturnDocument();
+    const { document } = createTestHtmlAndReturnContext();
     const canonicalNode = document.head.querySelector("link[rel='canonical']");
 
     expect(canonicalNode).toBeTruthy();
@@ -98,12 +100,12 @@ describe("generateIframeHtml static tests", () => {
   });
 
   test("Has body node", () => {
-    const document = createTestHtmlAndReturnDocument();
+    const { document } = createTestHtmlAndReturnContext();
     expect(document.body).toBeDefined();
   });
 
   test("Body node only contains our script node", () => {
-    const document = createTestHtmlAndReturnDocument();
+    const { document } = createTestHtmlAndReturnContext();
     const bodyChildren = getChildNodesWithoutTextNodes(document.body);
 
     expect(bodyChildren.length).toBe(1);
@@ -181,7 +183,7 @@ describe("generateIframeHtml static tests", () => {
   });
 
   test("Title is correct", () => {
-    const document = createTestHtmlAndReturnDocument();
+    const { document } = createTestHtmlAndReturnContext();
     const titleNode = document.head.querySelector("title");
     expect(titleNode?.innerHTML).toBe(
       `Cross-Origin HTML Embed ${TEST_NAME}: Active`,
@@ -189,17 +191,79 @@ describe("generateIframeHtml static tests", () => {
   });
 
   test("No name set for title", () => {
-    const document = createTestHtmlAndReturnDocument({ name: undefined });
+    const { document } = createTestHtmlAndReturnContext({ name: undefined });
     const titleNode = document.head.querySelector("title");
     expect(titleNode?.innerHTML).toBe(`Cross-Origin HTML Embed: Active`);
   });
 
   test("No canonical URL set", () => {
-    const document = createTestHtmlAndReturnDocument({
+    const { document } = createTestHtmlAndReturnContext({
       canonicalUrl: undefined,
     });
     const canonicalNode = document.head.querySelector("link[rel='canonical']");
     expect(canonicalNode).toBeFalsy();
+  });
+
+  test("Extending head HTML works", () => {
+    const { document } = createTestHtmlAndReturnContext({
+      extendHead: `<meta name="head-extend" content="success">`,
+    });
+
+    const headExtendMetaTag = document.head.querySelector(
+      "meta[name='head-extend']",
+    );
+
+    expect(headExtendMetaTag).toBeTruthy();
+  });
+
+  test("Extending body HTML works", () => {
+    const { document } = createTestHtmlAndReturnContext({
+      extendBody: `<div id="body-extend">I extended the body HTML statically.</div>`,
+    });
+
+    const bodyExtendTag = document.body.querySelector("div#body-extend");
+
+    expect(bodyExtendTag).toBeTruthy();
+    expect(bodyExtendTag?.innerHTML).toBe(
+      "I extended the body HTML statically.",
+    );
+  });
+
+  test("Extending head and body HTML works", () => {
+    const { document } = createTestHtmlAndReturnContext({
+      extendHead: `<meta name="head-extend" content="success">`,
+      extendBody: `<div id="body-extend">I extended the body HTML statically.</div>`,
+    });
+
+    const headExtendMetaTag = document.head.querySelector(
+      "meta[name='head-extend']",
+    );
+
+    expect(headExtendMetaTag).toBeTruthy();
+
+    const bodyExtendTag = document.body.querySelector("div#body-extend");
+
+    expect(bodyExtendTag).toBeTruthy();
+    expect(bodyExtendTag?.innerHTML).toBe(
+      "I extended the body HTML statically.",
+    );
+  });
+
+  test("Script injected by extending HTML is executed", async () => {
+    const { window } = createTestHtmlAndReturnContext(
+      {
+        extendHead: `<script>window.HEAD_EXTENDED = "yes";</script>`,
+        extendBody: `<script>window.BODY_EXTENDED = "absolutely";</script>`,
+      },
+      {
+        runScripts: "dangerously",
+      },
+    );
+
+    await pause(20);
+
+    expect(window["HEAD_EXTENDED"]).toBe("yes");
+    expect(window["BODY_EXTENDED"]).toBe("absolutely");
   });
 });
 

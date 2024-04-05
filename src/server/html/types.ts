@@ -6,6 +6,8 @@ export type GenerateBaseOptions = {
     href: string;
   };
   hideBranding?: boolean;
+  extendHead?: string;
+  extendBody?: string;
 };
 
 export type GenerateForOriginWhitelistOptions = GenerateBaseOptions & {

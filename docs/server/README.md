@@ -25,34 +25,36 @@ HTML (files) and serve them.
 To allow only specific origins:
 
 ```typescript
-import { generateIframeHtml } from "@perspective-software/cross-origin-html-embed";
+import {generateIframeHtml} from "@perspective-software/cross-origin-html-embed";
 
 const iframeHtml = generateIframeHtml({
-  allowAllOrigins: false,
-  originWhitelist: ["https://app.myservice.com"],
+    allowAllOrigins: false,
+    originWhitelist: ["https://app.myservice.com"],
 });
 ```
 
 To allow all origins:
 
 ```typescript
-import { generateIframeHtml } from "@perspective-software/cross-origin-html-embed";
+import {generateIframeHtml} from "@perspective-software/cross-origin-html-embed";
 
 const iframeHtml = generateIframeHtml({
-  allowAllOrigins: true,
+    allowAllOrigins: true,
 });
 ```
 
 ## All Options
 
 | Option            | Required                       | Description                                                                                                |
-| ----------------- | ------------------------------ | ---------------------------------------------------------------------------------------------------------- |
+|-------------------|--------------------------------|------------------------------------------------------------------------------------------------------------|
 | `allowAllOrigins` | yes                            | If `true`, receiving and sending messages from/to all origins via asterisk `*` is activated.               |
 | `originWhitelist` | (depends on `allowAllOrigins`) | A specific list of origins to receive messages from and sent messages to.                                  |
 | `name`            |                                | Will be added to the head title element.                                                                   |
 | `canoncialUrl`    |                                | If set, the `rel="canonical"` link tag will be added to the head.                                          |
 | `favicon`         |                                | If set, this objects describes `href` and `type` for a link tag with `rel="icon"` to be added to the head. |
 | `hideBranding`    |                                | If `true`, the iframe will not print the logo to the console.                                              |
+| `extendHead`      |                                | Optional HTML string which will be added before the end of the `<head>` tag.                               |
+| `extendBody`      |                                | Optional HTML string which will be added before the end of the `<body>` tag.                               |
 
 # Examples
 
@@ -67,24 +69,24 @@ Clone the repository and check them out.
 There is also an example available: [Express Example 🔗](./examples/express).
 
 ```typescript
-import { generateIframeHtml } from "@perspective-software/cross-origin-html-embed";
+import {generateIframeHtml} from "@perspective-software/cross-origin-html-embed";
 import express from "express";
 
 const PORT = process.env.PORT || 4042;
 const app = express();
 
 app.get("/", (_, res) => {
-  // 🛡️ Here happens the magic
-  const iframeHtml = generateIframeHtml({
-    allowAllOrigins: false,
-    originWhitelist: ["https://app.myservice.com"],
-  });
+    // 🛡️ Here happens the magic
+    const iframeHtml = generateIframeHtml({
+        allowAllOrigins: false,
+        originWhitelist: ["https://app.myservice.com"],
+    });
 
-  res.send(iframeHtml);
+    res.send(iframeHtml);
 });
 
 app.listen(PORT, () => {
-  console.log(`Server is running on port ${PORT}.`);
+    console.log(`Server is running on port ${PORT}.`);
 });
 ```
 
@@ -95,21 +97,21 @@ There is also an example available: [Next.js App Router Example 🔗](./examples
 ```typescript
 // app/route.ts
 
-import { generateIframeHtml } from "@perspective-software/cross-origin-html-embed";
+import {generateIframeHtml} from "@perspective-software/cross-origin-html-embed";
 
 export const dynamic = "force-dynamic"; // defaults to auto
 
 export async function GET() {
-  // 🛡️ Here happens the magic
-  const iframeHtml = generateIframeHtml({
-    allowAllOrigins: false,
-    originWhitelist: ["https://app.myservice.com"],
-    name: "Next.js App Router Example",
-  });
+    // 🛡️ Here happens the magic
+    const iframeHtml = generateIframeHtml({
+        allowAllOrigins: false,
+        originWhitelist: ["https://app.myservice.com"],
+        name: "Next.js App Router Example",
+    });
 
-  const response = new Response(iframeHtml);
-  response.headers.set("Content-Type", "text/html");
-  return response;
+    const response = new Response(iframeHtml);
+    response.headers.set("Content-Type", "text/html");
+    return response;
 }
 ```
 

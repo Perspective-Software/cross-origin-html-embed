@@ -1,14 +1,20 @@
 # Changelog
 
+## 1.2.0
+
+### Added
+
+- Added optional HTML generation options `extendHead` and `extendBody` which allows you to statically inject custom HTML into the head and body.
+
 ## 1.1.6
 
-## Fixed
+### Fixed
 
 - Checking if running inside iframe based on `window.parent` and not `window.top`.
 
 ## 1.1.5
 
-## Fixed
+### Fixed
 
 - `dist/mjs` is now post-processed with library `tsc-esm-fix` to add `.js` suffix to all imports.
 

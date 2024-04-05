@@ -47,6 +47,7 @@ export const generateIframeHtml = /* #__PURE__ */ function (
         <meta charset="UTF-8">
         ${options.favicon ? `<link rel="icon" type="${options.favicon.type}" href="${options.favicon.href}" />` : ""}
         ${options.canonicalUrl ? `<link rel="canonical" href="${options.canonicalUrl.href}" />` : ""}
+        ${options.extendHead ? options.extendHead : ""}
     </head>
     
     <body>
@@ -145,6 +146,8 @@ export const generateIframeHtml = /* #__PURE__ */ function (
               });
             })();
         </script>
+        
+        ${options.extendBody ? options.extendBody : ""}
     </body>
 </html>
 `;
