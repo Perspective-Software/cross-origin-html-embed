@@ -1,5 +1,12 @@
 # Changelog
 
+## 1.2.1
+
+### Changed
+
+- Generated iframe HTML will now add all attributes to cloned script nodes.
+- Generated iframe HTML will now append one child after the other with separate calls.
+
 ## 1.2.0
 
 ### Added

@@ -108,10 +108,7 @@ export const generateIframeHtml = /* #__PURE__ */ function (
                       const replacementScriptNode = document.createElement("script");
     
                       for ( const attribute of originalScriptNode.attributes ) {
-                          const attributeValue = attribute.value;
-                          if ( attributeValue && attributeValue.length > 0 ) {
-                              replacementScriptNode.setAttribute(attribute.name, attributeValue);
-                          }
+                          replacementScriptNode.setAttribute(attribute.name, attribute.value);
                       }
     
                       replacementScriptNode.text = originalScriptNode.innerHTML;
@@ -119,7 +116,9 @@ export const generateIframeHtml = /* #__PURE__ */ function (
                       originalScriptNode.parentNode.replaceChild(replacementScriptNode, originalScriptNode);
                   }
     
-                  targetNode.append(...Array.from(helper.childNodes));
+                  for ( const childNode of helper.childNodes ) {
+                     targetNode.appendChild(childNode);   
+                  }
               }
     
               function setHeadConent(content) {
