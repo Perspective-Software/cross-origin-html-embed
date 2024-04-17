@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.2.3
+
+### Changed
+
+- Injecting nodes one after another and waiting for script tags that have a `src` attribute to be loaded.
+
 ## 1.2.2
 
 ### Changed

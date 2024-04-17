@@ -93,6 +93,38 @@ export const generateIframeHtml = /* #__PURE__ */ function (
                       }
                   }
               }
+              
+              function injectNode(nodeToInject, targetNode) {
+                  if ( nodeToInject.nodeType === 1 && nodeToInject.tagName === "SCRIPT" && !!nodeToInject.attributes["src"] ) {
+                      let loadPromiseResolve = () => undefined
+                      
+                      const loadPromise = new Promise((resolve) => {
+                          loadPromiseResolve = resolve;
+                      });
+                      
+                      nodeToInject.onload = loadPromiseResolve;
+                      nodeToInject.onerror = () => {
+                        console.error("Injected a script node. Detected a load error. Will resolve the injection promise to not block subsequent injections.", nodeToInject);
+                        loadPromiseResolve();
+                      };
+                      
+                      targetNode.append(nodeToInject);
+                      
+                      return loadPromise;
+                  }
+                  
+                  targetNode.append(nodeToInject);
+                  return Promise.resolve();
+              }
+              
+              function injectNodesOneAfterAnother(nodesToInject, targetNode, stoppedFlagRef = {}) {
+                  return nodesToInject.reduce((chain, nodeToInject) => {
+                      return chain.then(() => {
+                          if ( stoppedFlagRef.stopped === true ) return;
+                          return injectNode(nodeToInject, targetNode);
+                      });
+                  }, Promise.resolve());   
+              }
     
               function injectHtml(html, targetNode) {
                   const helper = document.createElement("div");
@@ -116,19 +148,27 @@ export const generateIframeHtml = /* #__PURE__ */ function (
                       originalScriptNode.parentNode.replaceChild(replacementScriptNode, originalScriptNode);
                   }
     
-                  for ( const childNode of helper.childNodes ) {
-                     targetNode.append(childNode);   
+                  const stoppedFlagRef = { stopped: false };
+                  
+                  void injectNodesOneAfterAnother(Array.from(helper.childNodes), targetNode, stoppedFlagRef);
+                  
+                  return () => {
+                      stoppedFlagRef.stopped = true;
                   }
               }
     
+              let previousSetHeadContentStopInjection = () => undefined;
               function setHeadConent(content) {
                   cleanupNode(document.head, ownHeadChildNodes);
-                  injectHtml(content, document.head);
+                  previousSetHeadContentStopInjection();
+                  previousSetHeadContentStopInjection = injectHtml(content, document.head);
               }
     
+              let previousSetBodyContentStopInjection = () => undefined;
               function setBodyContent(content) {
                   cleanupNode(document.body, ownBodyChildNodes);
-                  injectHtml(content, document.body);
+                  previousSetBodyContentStopInjection();
+                  previousSetBodyContentStopInjection = injectHtml(content, document.body);
               }
               
               window.addEventListener('message', function(event) {
