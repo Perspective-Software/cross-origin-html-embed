@@ -117,7 +117,7 @@ export const generateIframeHtml = /* #__PURE__ */ function (
                   }
     
                   for ( const childNode of helper.childNodes ) {
-                     targetNode.appendChild(childNode);   
+                     targetNode.append(childNode);   
                   }
               }
     

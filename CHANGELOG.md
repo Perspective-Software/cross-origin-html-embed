@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.2.2
+
+### Changed
+
+- Using `append` instead of `appendChild` when injecting HTML.
+
 ## 1.2.1
 
 ### Changed
