@@ -1,5 +1,6 @@
 import { IframeDimensionsUpdateMessage, IframeMessage } from "../types";
 import { isValidIframeMessage } from "../utils";
+import { IframeUtmParamsUpdateMessage } from "../types/utm";
 
 export type ReceiveIframeMessagesOptions = {
   iframeEmitterCheck?: "strictSourceCheck" | "sourceOrOriginCheck";
@@ -117,14 +118,16 @@ export const receiveIframeMessages = /* #__PURE__ */ function (
  */
 export const receiveIframeDimensionsUpdates = /* #__PURE__ */ function (
   originOrIframe: string | string[] | HTMLIFrameElement,
-  callback: (message: IframeDimensionsUpdateMessage) => void,
+  callback: (
+    message: IframeDimensionsUpdateMessage | IframeUtmParamsUpdateMessage,
+  ) => void,
   options?: ReceiveIframeMessagesOptions,
 ): () => void {
   return receiveIframeMessages(
     originOrIframe,
     (message) => {
-      if (message.type === "dimensions-update") {
-        callback(message as IframeDimensionsUpdateMessage);
+      if (["dimensions-update", "utm"].includes(message.type)) {
+        callback(message);
       }
     },
     options,

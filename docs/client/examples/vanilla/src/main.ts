@@ -14,8 +14,13 @@ const iframe = document.querySelector(
 
 if (textarea && iframe) {
   iframe.onload = () => {
-    receiveIframeDimensionsUpdates(iframe, (message) => {
-      iframe.style.height = `${message.data.documentElementHeight}px`;
+    receiveIframeDimensionsUpdates(iframe, ({ type, data }) => {
+      if (type === "dimensions-update") {
+        iframe.style.height = `${data.documentElementHeight}px`;
+      } else if (type === "utm") {
+        const separator = iframe.src.includes('?') ? '&' : '?';
+        iframe.src = iframe.src + separator + data;
+      }
     });
 
     textarea.addEventListener("change", () => {

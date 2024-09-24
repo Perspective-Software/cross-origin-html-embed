@@ -9,12 +9,14 @@ export default function App() {
   const iframeRef = useRef<HTMLIFrameElement | null>(null);
   const [iframeLoaded, setIframeLoaded] = useState(false);
   const [iframeHeight, setIframeHeight] = useState(0);
+  const [utmParams, setUtmParams] = useState('');
   const [customHtml, setCustomHtml] = useState<string>("");
 
   useEffect(() => {
     if (iframeRef.current) {
-      return receiveIframeDimensionsUpdates(iframeRef.current, ({ data }) => {
-        setIframeHeight(data.documentElementHeight);
+      return receiveIframeDimensionsUpdates(iframeRef.current, ({ type, data }) => {
+        if (type === "dimensions-update") setIframeHeight(data.documentElementHeight);
+        else if (type === "utm") setUtmParams(data);
       });
     }
   }, []);
@@ -37,7 +39,7 @@ export default function App() {
 
       <iframe
         id="custom-html-sandbox"
-        src="http://localhost:4042"
+        src={`http://localhost:4042?${utmParams}`}
         ref={iframeRef}
         onLoad={() => {
           setIframeLoaded(true);
