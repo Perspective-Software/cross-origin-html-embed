@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.2.4
+
+## Changed 
+
+- FUN-1043: Updated the embed callbacks to handle a new message type, UTM. The purpose is to append UTM params to our iframe url which would pass tracking params.
+
 ## 1.2.3
 
 ### Changed
